@@ -426,3 +426,84 @@ footer { text-align: center; padding: 40px 0; border-top: 1px solid rgba(255,255
         filter: brightness(0.85);
     }
 }
+
+/* ====================================================
+   PRELOADER
+   ==================================================== */
+#preloader {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: #020305;
+    z-index: 99999;
+    display: flex; justify-content: center; align-items: center;
+    transition: opacity 0.5s ease;
+}
+.preloader-content {
+    text-align: center;
+}
+.logo-outline {
+    font-size: 4rem; font-weight: 700; color: transparent;
+    -webkit-text-stroke: 1px var(--accent-color, #38bdf8);
+    letter-spacing: 5px; margin-bottom: 20px;
+    animation: pulse 1.5s infinite alternate;
+}
+.loading-bar-container {
+    width: 200px; height: 2px; background: rgba(255,255,255,0.1);
+    border-radius: 10px; overflow: hidden; margin: 0 auto;
+}
+.loading-bar {
+    width: 0%; height: 100%; background: var(--accent-color, #38bdf8);
+    animation: loadBar 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@keyframes pulse {
+    0% { opacity: 0.5; }
+    100% { opacity: 1; text-shadow: 0 0 20px rgba(56,189,248,0.5); }
+}
+@keyframes loadBar {
+    0% { width: 0%; }
+    100% { width: 100%; }
+}
+
+/* ====================================================
+   HERO CANVAS (BACKGROUND PARTICLES)
+   ==================================================== */
+#hero-canvas {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 1; pointer-events: auto;
+}
+.hero .hero-content {
+    position: relative; z-index: 10; pointer-events: none;
+}
+.hero .hero-content .hero-buttons, .hero .hero-content a {
+    pointer-events: auto; /* allow clicks on buttons */
+}
+
+/* ====================================================
+   INFINITE SKILLS MARQUEE
+   ==================================================== */
+.marquee-container {
+    width: 100%; overflow: hidden; white-space: nowrap;
+    background: linear-gradient(90deg, rgba(2,3,5,1) 0%, rgba(20,21,26,0.5) 50%, rgba(2,3,5,1) 100%);
+    padding: 20px 0; border-top: 1px solid rgba(255,255,255,0.02); border-bottom: 1px solid rgba(255,255,255,0.02);
+    position: relative; z-index: 10;
+}
+.marquee-content {
+    display: inline-block;
+    animation: marquee 25s linear infinite;
+    font-size: 1.2rem; font-weight: 500; color: #d4d4d8; letter-spacing: 2px; text-transform: uppercase;
+}
+.marquee-content span {
+    margin: 0 20px; transition: color 0.3s;
+}
+.marquee-content span:hover {
+    color: var(--accent-color, #38bdf8);
+}
+.marquee-content .dot {
+    color: var(--accent-color, #38bdf8); opacity: 0.5; margin: 0;
+}
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); } /* Translate -50% because we duplicated the content */
+}

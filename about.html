@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aesthetic Lookbook | Hung Lam</title>
+    
+    <!-- SEO & Open Graph Meta Tags -->
+    <meta name="description" content="Hung Lam's Aesthetic Lookbook - A visual journey through Stoic logic, minimal fashion, and consistent discipline.">
+    <meta property="og:title" content="Aesthetic Lookbook | Hung Lam">
+    <meta property="og:description" content="A visual journey through Stoic logic, minimal fashion, and consistent discipline.">
+    <meta property="og:image" content="https://raw.githubusercontent.com/07hunglam/my-portifolio/main/wear.jpg">
+    <meta property="og:url" content="https://hunglam.dev/about.html">
+    <meta property="og:type" content="article">
+    <meta name="twitter:card" content="summary_large_image">
+
     <link rel="icon" type="image/png" href="logo.avif">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/png" href="favicon.png">
@@ -266,100 +276,6 @@
         </div>
     </div>
 
-    <script>
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) { entry.target.classList.add('show'); }
-            });
-        }, { threshold: 0.1, rootMargin: "0px 0px -40px 0px" }); 
-        document.querySelectorAll('.scroll-animate').forEach((el) => observer.observe(el));
-
-        // PARALLAX SCRIPT
-        if (window.innerWidth > 900) {
-            const viewportHeight = window.innerHeight;
-            window.addEventListener('scroll', () => {
-                document.querySelectorAll('.parallax').forEach(el => {
-                    const speed = parseFloat(el.getAttribute('data-speed')) || 0;
-                    const rect = el.getBoundingClientRect();
-                    if (rect.top < viewportHeight && rect.bottom > 0) {
-                        const elementCenter = rect.top + rect.height / 2;
-                        const viewportCenter = viewportHeight / 2;
-                        const distanceFromCenter = elementCenter - viewportCenter;
-                        el.style.transform = `translate3d(0, ${distanceFromCenter * (speed / 100)}px, 0)`;
-                    }
-                });
-            }, { passive: true });
-        }
-
-        // SWATCH THEME CHANGER
-        const swatches = document.querySelectorAll('.swatch-container');
-        swatches.forEach(swatch => {
-            swatch.addEventListener('click', () => {
-                document.querySelector('.swatch-container.active').classList.remove('active');
-                swatch.classList.add('active');
-                
-                const accentColor = swatch.getAttribute('data-color');
-                const accentRGB = swatch.getAttribute('data-rgb');
-                const bodyBG = swatch.getAttribute('data-bg');
-                const glassBG = swatch.getAttribute('data-glass');
-                
-                document.documentElement.style.setProperty('--accent-color', accentColor);
-                document.documentElement.style.setProperty('--accent-rgb', accentRGB);
-                document.documentElement.style.setProperty('--glass-bg', glassBG);
-                document.body.style.backgroundColor = bodyBG;
-            });
-        });
-
-        // THUẬT TOÁN TÍNH TOÁN % TIẾN TRÌNH CUỘN TRANG MAGAZINE (Ý TƯỞNG 4)
-        window.addEventListener('scroll', () => {
-            const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            document.getElementById('readingProgress').style.width = scrolled + '%';
-        }, { passive: true });
-        // ĐIỀU KHIỂN CON TRỎ CHUỘT NAM CHÂM TRÊN TRANG ABOUT
-        if (window.innerWidth > 900) {
-            const cursor = document.querySelector('.custom-cursor');
-            const follower = document.querySelector('.custom-cursor-follower');
-            // Thêm các mục tiêu hút nam châm trên trang About (nút Back Home, các vòng tròn đổi màu)
-            const magneticElements = document.querySelectorAll('.back-nav a, .swatch-container');
-
-            let mouseX = 0, mouseY = 0;
-            let isMagnetic = false;
-
-            window.addEventListener('mousemove', (e) => {
-                mouseX = e.clientX; mouseY = e.clientY;
-                cursor.style.left = mouseX + 'px'; cursor.style.top = mouseY + 'px';
-                if (!isMagnetic) {
-                    follower.style.left = mouseX + 'px'; follower.style.top = mouseY + 'px';
-                }
-            });
-
-            magneticElements.forEach(el => {
-                el.addEventListener('mouseenter', () => {
-                    cursor.classList.add('hovered'); follower.classList.add('hovered');
-                    isMagnetic = true; follower.classList.add('magnetic');
-                    const rect = el.getBoundingClientRect();
-                    follower.style.left = (rect.left + rect.width / 2) + 'px';
-                    follower.style.top = (rect.top + rect.height / 2) + 'px';
-                    follower.style.width = rect.width + 'px'; follower.style.height = rect.height + 'px';
-                });
-                el.addEventListener('mousemove', (e) => {
-                    if (isMagnetic) {
-                        const rect = el.getBoundingClientRect();
-                        const x = e.clientX - (rect.left + rect.width / 2);
-                        const y = e.clientY - (rect.top + rect.height / 2);
-                        el.style.transform = `translate3d(${x * 0.2}px, ${y * 0.2}px, 0) scale(1.02)`;
-                    }
-                });
-                el.addEventListener('mouseleave', () => {
-                    cursor.classList.remove('hovered'); follower.classList.remove('hovered');
-                    isMagnetic = false; follower.classList.remove('magnetic');
-                    follower.style.width = '40px'; follower.style.height = '40px';
-                    el.style.transform = '';
-                });
-            });
-        }
-    </script>
+    <script src="js/about.js"></script>
 </body>
 </html>

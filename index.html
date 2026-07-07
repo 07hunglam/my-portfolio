@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hung Lam | Premium Portfolio</title>
+    
+    <!-- SEO & Open Graph Meta Tags -->
+    <meta name="description" content="Hung Lam - Software Developer & IT Student. Exploring System Architecture, C/C++ and Aesthetic Web Design.">
+    <meta property="og:title" content="Hung Lam | Premium Portfolio">
+    <meta property="og:description" content="Software Developer & IT Student. Exploring System Architecture, C/C++ and Aesthetic Web Design.">
+    <meta property="og:image" content="https://raw.githubusercontent.com/07hunglam/my-portifolio/main/hunglam.jpg">
+    <meta property="og:url" content="https://hunglam.dev">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    
     <link rel="icon" type="image/png" href="logo.avif">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -11,7 +21,15 @@
 </head>
 <body>
 
-    <div class="custom-cursor"></div>
+    <!-- PRELOADER -->
+    <div id="preloader">
+        <div class="preloader-content">
+            <div class="logo-outline">HL.</div>
+            <div class="loading-bar-container">
+                <div class="loading-bar"></div>
+            </div>
+        </div>
+    </div>    <div class="custom-cursor"></div>
     <div class="custom-cursor-follower"></div>
 
     <div class="page-transition">
@@ -33,6 +51,7 @@
         </nav>
 
         <header class="hero" id="about">
+            <canvas id="hero-canvas"></canvas>
             <div class="hero-content">
                 <div class="hero-avatar scroll-animate" style="--delay: 0.1s">
                     <div class="liquid-ring"></div>
@@ -62,6 +81,27 @@
                 </div>
             </div>
         </header>
+
+        <!-- INFINITE SKILLS MARQUEE -->
+        <div class="marquee-container scroll-animate" style="--delay: 0.4s">
+            <div class="marquee-content">
+                <span>C/C++</span><span class="dot">•</span>
+                <span>System Architecture</span><span class="dot">•</span>
+                <span>Data Structures</span><span class="dot">•</span>
+                <span>HTML/CSS</span><span class="dot">•</span>
+                <span>JavaScript</span><span class="dot">•</span>
+                <span>English</span><span class="dot">•</span>
+                <span>Chinese</span><span class="dot">•</span>
+                <!-- Duplicate for seamless scroll -->
+                <span>C/C++</span><span class="dot">•</span>
+                <span>System Architecture</span><span class="dot">•</span>
+                <span>Data Structures</span><span class="dot">•</span>
+                <span>HTML/CSS</span><span class="dot">•</span>
+                <span>JavaScript</span><span class="dot">•</span>
+                <span>English</span><span class="dot">•</span>
+                <span>Chinese</span><span class="dot">•</span>
+            </div>
+        </div>
 
         <section id="education" class="section">
             <h2 class="section-title scroll-animate" style="--delay: 0.05s">Academic Background</h2>
@@ -149,159 +189,7 @@
         </footer>
     </div>
 
-    <script>
-        // ĐOẠN CODE SỬA CHUẨN ĐỂ VERCELL REWRITE KHÔNG BỊ LỖI ROUTING
-        async function updateVisitorCounter() {
-            try {
-                const hasVisited = sessionStorage.getItem('has_visited_hunglam_site');
-                let response;
-                if (hasVisited) {
-                    // Xóa bỏ đoạn ?metric=visitor_count dư thừa
-                    response = await fetch('/api/counter', { method: 'GET' });
-                } else {
-                    // Xóa bỏ đoạn ?metric=visitor_count dư thừa
-                    response = await fetch('/api/counter', { method: 'POST' });
-                    sessionStorage.setItem('has_visited_hunglam_site', 'true');
-                }
-                const data = await response.json();
-                if (data.success) {
-                    document.getElementById('view-counter').textContent = Number(data.value).toLocaleString();
-                } else {
-                    document.getElementById('view-counter').textContent = '---';
-                }
-            } catch (error) {
-                console.error('Lỗi kết nối API:', error);
-                document.getElementById('view-counter').textContent = 'Offline';
-            }
-        }
-        document.addEventListener('DOMContentLoaded', updateVisitorCounter);
-
-        // HIỆU ỨNG HIỂN THỊ KHI CUỘN TRANG (SCROLL ANIMATION)
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('show');
-                }
-            });
-        }, { threshold: 0.1, rootMargin: "0px 0px -40px 0px" }); 
-        document.querySelectorAll('.scroll-animate').forEach((el) => observer.observe(el));
-
-        // HIỆU ỨNG BLUR NAVBAR KHI CUỘN SỐNG TRANG
-        const navbar = document.querySelector('.navbar');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 40) { navbar.classList.add('scrolled'); } 
-            else { navbar.classList.remove('scrolled'); }
-        }, { passive: true });
-
-        // NAVBAR INDICATOR HOVER TRACKING
-        if (window.innerWidth > 900) {
-            const navLinks = document.querySelectorAll('.nav-links li');
-            const indicator = document.querySelector('.nav-indicator');
-            const navMenu = document.querySelector('.nav-links');
-
-            navLinks.forEach(link => {
-                link.addEventListener('mouseenter', () => {
-                    const rect = link.getBoundingClientRect();
-                    const parentRect = navMenu.getBoundingClientRect();
-                    indicator.style.cssText = `
-                        width: ${rect.width}px; height: ${rect.height}px;
-                        left: ${rect.left - parentRect.left}px; top: ${rect.top - parentRect.top}px;
-                        opacity: 1; transform: scale(1);
-                    `;
-                });
-            });
-            navMenu.addEventListener('mouseleave', () => {
-                indicator.style.cssText = `opacity: 0; transform: scale(0.8);`;
-            });
-        }
-
-        // ĐIỀU KHIỂN CON TRỎ CHUỘT NAM CHÂM TRÊN ĐỂ BÀN (DESKTOP)
-        if (window.innerWidth > 900) {
-            const cursor = document.querySelector('.custom-cursor');
-            const follower = document.querySelector('.custom-cursor-follower');
-            const magneticElements = document.querySelectorAll('.social-btn, .btn-secondary, .btn-primary, .nav-links a');
-
-            let mouseX = 0, mouseY = 0;
-            let isMagnetic = false;
-
-            window.addEventListener('mousemove', (e) => {
-                mouseX = e.clientX; mouseY = e.clientY;
-                cursor.style.left = mouseX + 'px'; cursor.style.top = mouseY + 'px';
-                if (!isMagnetic) {
-                    follower.style.left = mouseX + 'px'; follower.style.top = mouseY + 'px';
-                }
-            });
-
-            magneticElements.forEach(el => {
-                el.addEventListener('mouseenter', () => {
-                    cursor.classList.add('hovered'); follower.classList.add('hovered');
-                    if(el.classList.contains('glass-panel') || el.classList.contains('social-btn') || el.classList.contains('btn-primary')) {
-                        isMagnetic = true; follower.classList.add('magnetic');
-                        const rect = el.getBoundingClientRect();
-                        follower.style.left = (rect.left + rect.width / 2) + 'px';
-                        follower.style.top = (rect.top + rect.height / 2) + 'px';
-                        follower.style.width = rect.width + 'px'; follower.style.height = rect.height + 'px';
-                    }
-                });
-                el.addEventListener('mousemove', (e) => {
-                    if (isMagnetic) {
-                        const rect = el.getBoundingClientRect();
-                        const x = e.clientX - (rect.left + rect.width / 2);
-                        const y = e.clientY - (rect.top + rect.height / 2);
-                        el.style.transform = `translate3d(${x * 0.2}px, ${y * 0.2}px, 0) scale(1.02)`;
-                    }
-                });
-                el.addEventListener('mouseleave', () => {
-                    cursor.classList.remove('hovered'); follower.classList.remove('hovered');
-                    isMagnetic = false; follower.classList.remove('magnetic');
-                    follower.style.width = '40px'; follower.style.height = '40px';
-                    el.style.transform = '';
-                });
-            });
-        }
-        // XỬ LÝ ẨN/HIỆN NÚT CUỘN LÊN ĐẦU TRANG KHI CUỘN QUA VÙNG HERO
-        const backToTopBtn = document.getElementById('backToTop');
-
-        // ====================================================
-        // THUẬT TOÁN LERP ĐIỀU KHIỂN NÚT TRƯỢT THEO CUỘN TRANG
-        // ====================================================
-        const btt = document.getElementById('backToTop');
-        
-        let currentY = window.scrollY + (window.innerHeight / 2);
-        let targetY = currentY;
-        const ease = 0.1; // Độ mượt vật lý (Số càng nhỏ nút di chuyển càng trễ và mượt)
-
-        // 1. Giám sát liên tục vị trí cuộn để tính toán tọa độ đích (Giữa màn hình)
-        window.addEventListener('scroll', () => {
-            const winScroll = window.scrollY;
-            
-            // Ẩn/Hiện nút khi cuộn qua vùng Hero
-            if (winScroll > 400) {
-                btt.classList.add('visible');
-            } else {
-                btt.classList.remove('visible');
-            }
-
-            // Tọa độ đích luôn nằm chính giữa màn hình (Middle) khi cuộn
-            targetY = winScroll + (window.innerHeight / 2) - 23; // trừ 23px bằng nửa chiều cao nút để tâm nằm giữa
-        }, { passive: true });
-
-        // 2. Vòng lặp liên tục (Animation Loop) tạo hiệu ứng trượt đuổi mượt mà
-        function updateFloatingPosition() {
-            // Công thức nội suy tuyến tính (Lerp) tạo độ trễ vật lý cao cấp
-            currentY += (targetY - currentY) * ease;
-            
-            if (btt) {
-                btt.style.top = currentY + 'px';
-            }
-            
-            // Chạy liên tục theo tần số quét của màn hình (60Hz / 120Hz)
-            requestAnimationFrame(updateFloatingPosition);
-        }
-        
-        // Kích hoạt vòng lặp chuyển động
-        requestAnimationFrame(updateFloatingPosition);
-    </script>
+    <script src="js/main.js"></script>
     
 </body>
 </html>
