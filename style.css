@@ -507,3 +507,108 @@ footer { text-align: center; padding: 40px 0; border-top: 1px solid rgba(255,255
     0% { transform: translateX(0); }
     100% { transform: translateX(-50%); } /* Translate -50% because we duplicated the content */
 }
+
+/* ====================================================
+   UI/UX PRO MAX IMPROVEMENTS
+   ==================================================== */
+
+/* 1. Projects Grid */
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+.project-card {
+    padding: 35px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease;
+}
+.project-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(56, 189, 248, 0.15);
+    border-color: rgba(56, 189, 248, 0.3);
+}
+.project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+.project-icon {
+    font-size: 2.2rem;
+    color: var(--accent-color, #38bdf8);
+}
+.project-link {
+    color: #a1a1aa;
+    font-size: 1.2rem;
+    transition: color 0.2s ease, transform 0.2s ease;
+    padding: 10px; /* Expand touch target */
+    margin: -10px; /* Offset padding visually */
+}
+.project-link:hover {
+    color: #ffffff;
+    transform: scale(1.1) translate(2px, -2px);
+}
+.project-card h3 {
+    color: #ffffff;
+    font-size: 1.5rem;
+    margin-bottom: 12px;
+}
+.project-card p {
+    color: #d4d4d8;
+    font-size: 0.95rem;
+    margin-bottom: 25px;
+    line-height: 1.6;
+}
+.project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.tag {
+    font-size: 0.8rem;
+    padding: 6px 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+    color: #a1a1aa;
+    letter-spacing: 1px;
+}
+
+/* 2. Marquee Hover Pause */
+.marquee-container:hover .marquee-content {
+    animation-play-state: paused;
+}
+
+/* 3. Mobile Nav Touch Targets Optimization */
+@media (max-width: 900px) {
+    .nav-links a {
+        padding: 14px 24px; /* Increase padding for better touch targets (min 44px height) */
+    }
+}
+
+/* 4. Accessibility: Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    .parallax {
+        transform: none !important;
+    }
+    .custom-cursor, .custom-cursor-follower {
+        display: none !important;
+    }
+    body {
+        cursor: auto;
+    }
+    a, button, .social-btn, .btn-primary, .btn-secondary, .nav-links a {
+        cursor: pointer;
+    }
+}
