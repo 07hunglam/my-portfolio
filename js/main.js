@@ -76,7 +76,7 @@ if (canvas && !prefersReducedMotion.matches) {
             ctx.beginPath();
             ctx.arc(this.x + parallaxX, this.y + parallaxY, this.size, 0, Math.PI * 2, false);
 
-            const isLight = document.body.classList.contains('light-mode');
+            const isLight = document.documentElement.classList.contains('light-mode');
             ctx.fillStyle = isLight ? 'rgba(121, 92, 46, 0.4)' : 'rgba(56, 189, 248, 0.4)';
             ctx.fill();
         }
@@ -120,7 +120,7 @@ if (canvas && !prefersReducedMotion.matches) {
 
     function connect() {
         let opacityValue = 1;
-        const isLight = document.body.classList.contains('light-mode');
+        const isLight = document.documentElement.classList.contains('light-mode');
         const colorBase = isLight ? '121, 92, 46' : '56, 189, 248';
 
         for (let a = 0; a < particlesArray.length; a++) {
@@ -334,17 +334,17 @@ const themeToggle = document.getElementById('theme-toggle');
 if (themeToggle) {
     const savedTheme = localStorage.getItem('theme') || 'dark';
     if (savedTheme === 'light') {
-        document.body.classList.add('light-mode');
+        document.documentElement.classList.add('light-mode');
         setThemeIcon(themeToggle, true);
         const ghChart = document.getElementById('github-chart-img');
         if (ghChart) ghChart.src = GH_CHART_LIGHT;
     }
 
     themeToggle.addEventListener('click', (e) => {
-        const isLight = !document.body.classList.contains('light-mode');
+        const isLight = !document.documentElement.classList.contains('light-mode');
 
         const toggleTheme = () => {
-            document.body.classList.toggle('light-mode');
+            document.documentElement.classList.toggle('light-mode');
             localStorage.setItem('theme', isLight ? 'light' : 'dark');
             setThemeIcon(themeToggle, isLight);
 
@@ -415,6 +415,7 @@ const i18n = {
         'greeting': 'INTRODUCTION',
         'hero_title': "Hello, I'm Hung Lam",
         'tag_student': 'IT STUDENT', 'tag_developer': 'SOFTWARE DEVELOPER', 'tag_explorer': 'STOIC EXPLORER',
+        'info_name': 'Full name:', 'info_name_val': 'Lâm Gia Hưng',
         'info_gender': 'Gender:', 'info_gender_val': 'Male',
         'info_dob': 'Date of Birth:', 'info_dob_val': 'September 22, 2007',
         'info_edu': 'Education:', 'info_edu_val': 'K26 HCMUS - University of Science',
@@ -520,6 +521,7 @@ const i18n = {
         'greeting': 'GIỚI THIỆU',
         'hero_title': 'Xin chào, mình là Hưng Lâm',
         'tag_student': 'SINH VIÊN IT', 'tag_developer': 'LẬP TRÌNH VIÊN', 'tag_explorer': 'NGƯỜI KHẮC KỶ',
+        'info_name': 'Họ và tên:', 'info_name_val': 'Lâm Gia Hưng',
         'info_gender': 'Giới tính:', 'info_gender_val': 'Nam',
         'info_dob': 'Ngày sinh:', 'info_dob_val': '22 tháng 9, 2007',
         'info_edu': 'Học vấn:', 'info_edu_val': 'K26 HCMUS - Trường Đại học Khoa học Tự nhiên',

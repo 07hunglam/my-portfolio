@@ -76,12 +76,11 @@
             90% { transform: translate(-10%, 10%); }
         }
 
-        :root {
-            --accent-color: #38bdf8;
-            --accent-rgb: 56, 189, 248;
-            --glass-bg: rgba(20, 21, 26, 0.3);
-            --body-bg: #020305;
-        }
+        /* No :root palette override here on purpose. It used to re-declare the
+           dark defaults that style.css already sets, and because this sheet
+           comes later it beat .light-mode once the theme class moved to <html>,
+           freezing the glass panels dark. The swatch picker still overrides
+           these at runtime via documentElement.style, which outranks any sheet. */
 
         body, .magazine-text, .back-nav a, h2, p, span, .outline-text {
             transition: background-color 0.6s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s ease, border-color 0.4s ease, -webkit-text-stroke 0.4s ease;
@@ -206,6 +205,31 @@
         .stat-callout .stat-label { color: var(--accent-color); font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase; margin-top: 10px; }
         .accent-stripe { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 6rem; color: transparent; -webkit-text-stroke: 1px var(--accent-color); white-space: nowrap; overflow: hidden; opacity: 0.3; margin-bottom: 20px; }
 
+        /* --- CAPTION LAID OVER A PHOTO (Details & Motion) --- */
+        .has-caption { min-height: 50vh; }
+        .bento-caption {
+            position: absolute;
+            left: 40px; right: 40px; bottom: 40px;
+            max-width: 600px;
+            z-index: 3;
+        }
+        .bento-caption .chapter-title { font-size: 3rem; color: #fff; }
+        .bento-caption .tag-chips { margin-top: 0; margin-bottom: 15px; }
+        .bento-caption .tag-chip { border-color: rgba(255,255,255,0.35); color: #fff; }
+        .bento-caption .magazine-text { color: rgba(255,255,255,0.92); font-weight: 400; }
+
+        /* Scrim keeps the white text legible over any part of the photo, and in
+           light mode where the card behind it is pale */
+        .has-caption .img-wrapper::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.45) 45%, rgba(0,0,0,0.08) 100%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
         .img-wrapper { position: relative; border-radius: 20px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.6); will-change: transform; z-index: 2;}
         .mag-img { width: 100%; height: 100%; object-fit: cover; border-radius: 20px; transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1); will-change: transform; }
         .img-wrapper:hover .mag-img { transform: scale(1.05); }
@@ -248,6 +272,30 @@
             .row-span-2 { grid-row: span 1; }
             .bento-item { padding: 30px; }
             .bento-item.image-only { min-height: 40vh; }
+
+            /* At this width the caption is taller than the card, so overlaying
+               it pushed the text out through the top. Stack it under the photo
+               instead - that also stops longer translations from ever spilling. */
+            .bento-item.image-only.has-caption {
+                min-height: 0;
+                display: flex;
+                flex-direction: column;
+                padding: 0;
+            }
+            .has-caption .img-wrapper { height: 38vh; flex: 0 0 auto; }
+            .has-caption .img-wrapper::after {
+                border-radius: 20px 20px 0 0;
+                background: linear-gradient(to top, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.1) 60%, transparent 100%);
+            }
+            .bento-caption {
+                position: static;
+                max-width: none;
+                padding: 22px 20px 26px;
+            }
+            /* Now sitting on the card, not the photo - follow the theme */
+            .bento-caption .chapter-title { font-size: 2rem; color: var(--text-main); }
+            .bento-caption .magazine-text { color: var(--text-muted); font-size: 1rem; }
+            .bento-caption .tag-chip { border-color: var(--glass-border); color: var(--text-main); }
 
             /* Theme + language controls must stay reachable on mobile */
             .back-nav { top: 16px; left: 20px; right: 20px; }
@@ -380,17 +428,17 @@
                 </div>
 
                 <!-- BENTO ROW 4: Details & Motion -->
-                <div class="bento-item col-span-4 row-span-2 image-only scroll-animate" style="--delay: 0.2s; min-height: 50vh;">
+                <div class="bento-item col-span-4 row-span-2 image-only has-caption scroll-animate" style="--delay: 0.2s">
                     <div class="img-wrapper parallax" data-speed="-5">
-                        <img src="bmw.webp" width="1500" height="938" loading="lazy" decoding="async" class="mag-img" alt="Night city street seen from a moving vehicle" style="opacity: 0.5;">
+                        <img src="bmw.webp" width="1500" height="938" loading="lazy" decoding="async" class="mag-img" alt="Night city street seen from a moving vehicle">
                     </div>
-                    <div style="position: absolute; bottom: 40px; left: 40px; max-width: 600px;">
-                        <h2 class="chapter-title" data-i18n-html="abt_ch4" style="font-size: 3rem; color: #fff;">Details &amp; Motion<span class="dot">.</span></h2>
-                        <div class="tag-chips" style="margin-bottom: 15px;">
-                            <span class="tag-chip" data-i18n="abt_tag5" style="border-color: rgba(255,255,255,0.2); color: #fff;">Urban Cruising</span>
-                            <span class="tag-chip" data-i18n="abt_tag6" style="border-color: rgba(255,255,255,0.2); color: #fff;">Horology</span>
+                    <div class="bento-caption">
+                        <h2 class="chapter-title" data-i18n-html="abt_ch4">Details &amp; Motion<span class="dot">.</span></h2>
+                        <div class="tag-chips">
+                            <span class="tag-chip" data-i18n="abt_tag5">Urban Cruising</span>
+                            <span class="tag-chip" data-i18n="abt_tag6">Horology</span>
                         </div>
-                        <p class="magazine-text" data-i18n="abt_desc4" style="color: rgba(255,255,255,0.9); font-weight: 400;">Whether navigating the pulse of the city after hours on a custom ride, or appreciating the intricate mechanics of a modified timepiece—true sophistication always lies in the unseen details.</p>
+                        <p class="magazine-text" data-i18n="abt_desc4">Whether navigating the pulse of the city after hours on a custom ride, or appreciating the intricate mechanics of a modified timepiece—true sophistication always lies in the unseen details.</p>
                     </div>
                 </div>
                 
