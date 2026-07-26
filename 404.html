@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Not Found | Hung Lam</title>
+
+    <meta name="robots" content="noindex">
+    <meta name="theme-color" content="#020305" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#efece7" media="(prefers-color-scheme: light)">
+
+    <link rel="icon" type="image/avif" href="/logo.avif">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+
+    <script defer src="/js/main.js"></script>
+
+    <style>
+        .nf {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px 5%;
+            position: relative;
+            z-index: 10;
+        }
+        .nf-code {
+            font-family: 'Outfit', 'Space Grotesk', sans-serif;
+            font-size: clamp(6rem, 22vw, 14rem);
+            font-weight: 800;
+            line-height: 0.9;
+            letter-spacing: -4px;
+            color: transparent;
+            -webkit-text-stroke: 1.5px var(--accent-color);
+            user-select: none;
+        }
+        .nf h1 {
+            font-size: clamp(1.6rem, 5vw, 2.6rem);
+            color: var(--text-main);
+            font-weight: 500;
+            margin: 24px 0 12px;
+            letter-spacing: -0.5px;
+        }
+        .nf p {
+            color: var(--text-muted);
+            max-width: 44ch;
+            margin-bottom: 40px;
+        }
+        .nf-actions { position: absolute; top: 28px; right: 28px; }
+    </style>
+</head>
+<body>
+    <div class="progress-container" aria-hidden="true">
+        <div class="progress-bar" id="readingProgress"></div>
+    </div>
+    <div class="custom-cursor" aria-hidden="true"></div>
+    <div class="custom-cursor-follower" aria-hidden="true"></div>
+
+    <div class="page-transition">
+        <div class="nf-actions">
+            <div class="nav-actions">
+                <button id="theme-toggle" class="nav-action-btn" data-i18n-aria="aria_theme" aria-label="Toggle dark or light mode">
+                    <svg class="icon" aria-hidden="true"><use href="/icons.svg#icon-moon"/></svg>
+                </button>
+                <button id="lang-toggle" class="nav-action-btn" aria-label="Language / Ngôn ngữ" style="font-size: 1rem; font-weight: 600; padding: 5px 10px;">
+                    EN
+                </button>
+            </div>
+        </div>
+
+        <main class="nf">
+            <div class="nf-code" aria-hidden="true" data-i18n="nf_code">404</div>
+            <h1 data-i18n="nf_title">Nothing here.</h1>
+            <p data-i18n="nf_lead">This page does not exist, which is itself a kind of answer.</p>
+            <a href="/" class="btn-primary">
+                <svg class="icon" aria-hidden="true"><use href="/icons.svg#icon-arrow-left"/></svg>
+                <span data-i18n="nf_home">Back to the start</span>
+            </a>
+        </main>
+    </div>
+</body>
+</html>

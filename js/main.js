@@ -324,24 +324,29 @@ if (btt) {
 const GH_CHART_DARK = 'https://ghchart.rshah.org/38bdf8/07hunglam';
 const GH_CHART_LIGHT = 'https://ghchart.rshah.org/795c2e/07hunglam';
 
+// Points the toggle's sprite <use> at the sun or the moon
+function setThemeIcon(button, light) {
+    const use = button.querySelector('use');
+    if (use) use.setAttribute('href', light ? '/icons.svg#icon-sun' : '/icons.svg#icon-moon');
+}
+
 const themeToggle = document.getElementById('theme-toggle');
 if (themeToggle) {
     const savedTheme = localStorage.getItem('theme') || 'dark';
     if (savedTheme === 'light') {
         document.body.classList.add('light-mode');
-        themeToggle.innerHTML = '<i class="fa-solid fa-sun"></i>';
+        setThemeIcon(themeToggle, true);
         const ghChart = document.getElementById('github-chart-img');
         if (ghChart) ghChart.src = GH_CHART_LIGHT;
     }
 
     themeToggle.addEventListener('click', (e) => {
         const isLight = !document.body.classList.contains('light-mode');
-        const icon = themeToggle.querySelector('i');
 
         const toggleTheme = () => {
             document.body.classList.toggle('light-mode');
             localStorage.setItem('theme', isLight ? 'light' : 'dark');
-            if (icon) icon.className = isLight ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+            setThemeIcon(themeToggle, isLight);
 
             const ghChart = document.getElementById('github-chart-img');
             if (ghChart) ghChart.src = isLight ? GH_CHART_LIGHT : GH_CHART_DARK;
@@ -359,8 +364,16 @@ if (themeToggle) {
             Math.max(y, window.innerHeight - y)
         );
 
+        // Tells the stylesheet to suppress the default root cross-fade for this
+        // transition only, so the clip-path sweep below is the whole effect
+        document.documentElement.classList.add('theme-transition');
+
         const transition = document.startViewTransition(() => {
             toggleTheme();
+        });
+
+        transition.finished.finally(() => {
+            document.documentElement.classList.remove('theme-transition');
         });
 
         transition.ready.then(() => {
@@ -419,6 +432,37 @@ const i18n = {
         'edu_3_date': 'Upcoming',
         'edu_3_name': 'University of Science (HCMUS)',
         'edu_3_desc': 'Mapping a structured academic pathway toward advanced Computer Science research.',
+
+        // --- labels for assistive tech only ---
+        'aria_theme': 'Toggle dark or light mode',
+        'aria_pagenav': 'Page navigation',
+        'aria_email': 'Send an email',
+        'aria_facebook': 'Facebook profile (opens in a new tab)',
+        'aria_instagram': 'Instagram profile (opens in a new tab)',
+        'aria_backtotop': 'Back to top',
+        'aria_algo_group': 'Choose an algorithm',
+        'aria_code_panel': 'C++ source of demo/sort.cpp',
+        'aria_close': 'Close details',
+        'aria_prj_1': 'Expand details: "Tài" Short Film Campaign',
+        'aria_prj_2': 'Expand details: System Architecture & Algorithms',
+        'aria_palette': 'Accent colour theme',
+        'aria_swatch_1': 'Sky blue accent',
+        'aria_swatch_2': 'Deep navy accent',
+        'aria_swatch_3': 'Slate grey accent',
+        'aria_swatch_4': 'Off-white accent',
+
+        // --- sorting visualiser ---
+        'sd_title': 'Algorithms, Watched',
+        'sd_lead': 'Three sorting algorithms, running the way they actually run. The panel on the right is demo/sort.cpp itself - the highlighted line is the line doing the work.',
+        'sd_play': 'Play', 'sd_pause': 'Pause', 'sd_step': 'Step', 'sd_shuffle': 'Shuffle',
+        'sd_speed': 'Speed', 'sd_compares': 'comparisons', 'sd_swaps': 'swaps',
+        'sd_source': 'demo/sort.cpp',
+
+        // --- 404 ---
+        'nf_code': '404',
+        'nf_title': 'Nothing here.',
+        'nf_lead': 'This page does not exist, which is itself a kind of answer.',
+        'nf_home': 'Back to the start',
 
         // --- github ---
         'git_title': 'GitHub Activity',
@@ -494,6 +538,37 @@ const i18n = {
         'edu_3_name': 'Trường Đại học Khoa học Tự nhiên (HCMUS)',
         'edu_3_desc': 'Vạch lộ trình học thuật hướng tới nghiên cứu chuyên sâu về Khoa học Máy tính.',
 
+        // --- labels for assistive tech only ---
+        'aria_theme': 'Chuyển chế độ sáng/tối',
+        'aria_pagenav': 'Điều hướng trang',
+        'aria_email': 'Gửi email',
+        'aria_facebook': 'Trang Facebook (mở tab mới)',
+        'aria_instagram': 'Trang Instagram (mở tab mới)',
+        'aria_backtotop': 'Lên đầu trang',
+        'aria_algo_group': 'Chọn thuật toán',
+        'aria_code_panel': 'Mã nguồn C++ của demo/sort.cpp',
+        'aria_close': 'Đóng chi tiết',
+        'aria_prj_1': 'Mở chi tiết: Chiến dịch phim ngắn "Tài"',
+        'aria_prj_2': 'Mở chi tiết: Kiến trúc hệ thống & Giải thuật',
+        'aria_palette': 'Màu nhấn giao diện',
+        'aria_swatch_1': 'Màu nhấn xanh trời',
+        'aria_swatch_2': 'Màu nhấn xanh navy đậm',
+        'aria_swatch_3': 'Màu nhấn xám đá',
+        'aria_swatch_4': 'Màu nhấn trắng ngà',
+
+        // --- sorting visualiser ---
+        'sd_title': 'Thuật toán, xem tận mắt',
+        'sd_lead': 'Ba thuật toán sắp xếp, chạy đúng như cách chúng thực sự chạy. Khung bên phải chính là file demo/sort.cpp — dòng đang sáng là dòng đang làm việc.',
+        'sd_play': 'Chạy', 'sd_pause': 'Dừng', 'sd_step': 'Từng bước', 'sd_shuffle': 'Trộn lại',
+        'sd_speed': 'Tốc độ', 'sd_compares': 'lượt so sánh', 'sd_swaps': 'lượt đổi chỗ',
+        'sd_source': 'demo/sort.cpp',
+
+        // --- 404 ---
+        'nf_code': '404',
+        'nf_title': 'Không có gì ở đây.',
+        'nf_lead': 'Trang này không tồn tại — bản thân điều đó cũng là một câu trả lời.',
+        'nf_home': 'Về trang đầu',
+
         // --- github ---
         'git_title': 'Hoạt động GitHub',
         'git_repos': 'Kho công khai', 'git_followers': 'Người theo dõi', 'git_following': 'Đang theo dõi',
@@ -568,10 +643,23 @@ function applyLanguage(lang) {
         }
     });
 
+    // Labels that only exist for assistive tech still have to follow the page
+    document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+        const key = el.getAttribute('data-i18n-aria');
+        if (dict[key] !== undefined) {
+            el.setAttribute('aria-label', dict[key]);
+        } else {
+            console.warn(`[i18n] missing key "${key}" for language "${lang}"`);
+        }
+    });
+
     document.documentElement.lang = lang;
 
     // Hero title is split into per-character spans by GSAP - rebuild after a swap
     if (typeof initHeroGSAP === 'function') initHeroGSAP();
+
+    // Components that build strings in JS (the sort visualiser) re-render here
+    document.dispatchEvent(new CustomEvent('languagechange', { detail: { lang } }));
 }
 
 const langToggle = document.getElementById('lang-toggle');
@@ -588,7 +676,10 @@ if (langToggle) {
         currentLang = currentLang === 'en' ? 'vi' : 'en';
         localStorage.setItem('lang', currentLang);
         langToggle.textContent = LANG_LABEL[currentLang];
-        langToggle.setAttribute('aria-label', 'Switch language (currently ' + LANG_LABEL[currentLang] + ')');
+        // Kept bilingual on purpose: someone who cannot read the current
+        // language still has to be able to find the control that changes it
+        langToggle.setAttribute('aria-label',
+            'Language / Ngôn ngữ - ' + LANG_LABEL[currentLang]);
         applyLanguage(currentLang);
     });
 }
@@ -732,8 +823,9 @@ function initProjectCards() {
         if (!closeBtn) {
             closeBtn = document.createElement('button');
             closeBtn.type = 'button';
-            closeBtn.innerHTML = '<i class="fa-solid fa-xmark" aria-hidden="true"></i>';
+            closeBtn.innerHTML = '<svg class="icon" aria-hidden="true"><use href="/icons.svg#icon-x"/></svg>';
             closeBtn.className = 'flip-close-btn';
+            closeBtn.setAttribute('data-i18n-aria', 'aria_close');
             closeBtn.setAttribute('aria-label', 'Close details');
             closeBtn.style.cssText = 'display:none;position:absolute;top:16px;right:16px;background:transparent;border:none;color:var(--text-main);font-size:1.5rem;cursor:pointer;z-index:100;';
             card.appendChild(closeBtn);
@@ -805,6 +897,11 @@ document.addEventListener('DOMContentLoaded', () => {
     initAdvancedAnimations();
     initProjectCards();
 
+    // applyLanguage already ran at parse time, before the close buttons above
+    // existed. Re-apply so anything built by JS is labelled in the right
+    // language on a first load rather than only after a manual toggle.
+    applyLanguage(document.documentElement.lang === 'vi' ? 'vi' : 'en');
+
     // TERMINAL TYPING EFFECT FOR TAGLINE
     const taglineSpans = document.querySelectorAll('.tagline span:not(.accent-dot)');
     if (taglineSpans.length && !prefersReducedMotion.matches
@@ -823,34 +920,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // SEAMLESS PAGE TRANSITIONS
-    const overlay = document.getElementById('page-transition-overlay');
-    if (!overlay) return;
-
-    const animated = typeof gsap !== 'undefined' && !prefersReducedMotion.matches;
-    if (animated) {
-        // Entry wipe: start covering the viewport, then slide up and out
-        gsap.set(overlay, { yPercent: 0 });
-        gsap.to(overlay, { yPercent: -100, duration: 0.8, ease: 'power4.inOut' });
-    }
-
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    document.querySelectorAll('a[href$=".html"]').forEach(link => {
-        link.addEventListener('click', (e) => {
-            const href = link.getAttribute('href');
-            if (!href || href === currentPage) return;
-            if (e.metaKey || e.ctrlKey || e.shiftKey || link.target === '_blank') return; // let the browser open a new tab
-
-            e.preventDefault();
-            if (!animated) { window.location.href = href; return; }
-
-            gsap.set(overlay, { yPercent: 100 });
-            gsap.to(overlay, {
-                yPercent: 0,
-                duration: 0.6,
-                ease: 'power4.inOut',
-                onComplete: () => { window.location.href = href; }
-            });
-        });
-    });
+    // Page-to-page transitions are handled by the CSS @view-transition rule.
+    // No JS, no overlay element, and no click interception: normal navigation
+    // still works everywhere, it is just animated where the browser supports it.
 });

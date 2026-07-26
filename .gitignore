@@ -2,6 +2,11 @@
 old_index.html
 old2_index.html
 
+# Compiled output from demo/sort.cpp
+demo/*.exe
+demo/sort
+demo/a.out
+
 # Tooling / editor
 .claude/
 .DS_Store
