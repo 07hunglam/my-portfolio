@@ -1,0 +1,10 @@
+# Local backups of previous page versions - never deploy these
+old_index.html
+old2_index.html
+
+# Tooling / editor
+.claude/
+.DS_Store
+Thumbs.db
+__pycache__/
+*.pyc
