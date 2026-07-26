@@ -367,16 +367,35 @@ button:focus-visible, a:focus-visible {
     outline-offset: 6px;
 }
 
-/* --- PAGE TRANSITION OVERLAY ---
-   GSAP drives this with yPercent. It defaults to fully off-screen so that if
-   GSAP fails to load the page is never left covered by a blank panel. */
-#page-transition-overlay {
-    position: fixed;
-    top: 0; left: 0; width: 100vw; height: 100vh;
-    background-color: var(--bg-color);
-    z-index: 99999;
-    pointer-events: none;
-    transform: translateY(-100%);
+/* ====================================================
+   SPRITE ICONS
+   1em square so they inherit whatever font-size the old <i> tags did,
+   which keeps every existing size rule (.ach-icon, .project-icon, ...) working.
+   ==================================================== */
+.icon {
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    vertical-align: -0.125em;
+    flex-shrink: 0;
+}
+
+/* ====================================================
+   PAGE TRANSITIONS (View Transitions API)
+   Cross-document, driven entirely by CSS. Browsers without support just
+   navigate normally - nothing to fail, nothing left covering the page.
+   ==================================================== */
+@view-transition {
+    navigation: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    /* Skip the animation but keep the navigation instant and working */
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+        animation: none !important;
+    }
 }
 
 /* --- SKELETON LOADING --- */
@@ -856,10 +875,195 @@ body.modal-open .project-backdrop {
 }
 
 /* ====================================================
-   VIEW TRANSITIONS API (THEME TOGGLE)
+   SORTING VISUALISER
+   Everything is painted from the existing colour tokens, so the demo follows
+   dark/light mode and the about-page accent swatches with no extra JS.
    ==================================================== */
-::view-transition-old(root),
-::view-transition-new(root) {
+.sort-demo {
+    max-width: 1150px;
+    margin: 0 auto;
+    padding: 40px;
+    border: 1px solid var(--glass-border);
+    border-radius: 28px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+.sd-lead {
+    color: var(--text-muted);
+    font-size: 1rem;
+    max-width: 70ch;
+    margin-bottom: 32px;
+}
+
+.sd-stage {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    align-items: stretch;
+}
+
+/* --- bars --- */
+.sd-visual { display: flex; flex-direction: column; min-width: 0; }
+.sd-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 280px;
+    padding: 0 2px;
+}
+.sd-bar {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 10%;
+    border-radius: 3px 3px 0 0;
+    background: rgba(var(--accent-rgb), 0.25);
+    transition: height 0.12s linear, background-color 0.12s linear;
+}
+.sd-bar.is-locked { background: rgba(var(--accent-rgb), 0.6); }
+.sd-bar.is-active {
+    background: var(--text-main);
+    box-shadow: 0 0 12px rgba(var(--accent-rgb), 0.5);
+}
+.sd-status {
+    margin-top: 18px;
+    color: var(--text-main);
+    font-size: 0.95rem;
+    min-height: 1.5em;
+}
+.sd-counts {
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    margin-top: 4px;
+}
+.sd-counts .sd-compares, .sd-counts .sd-swaps {
+    color: var(--accent-color);
+    font-variant-numeric: tabular-nums;
+}
+.sd-sep { margin: 0 8px; opacity: 0.5; }
+
+/* --- source panel --- */
+.sd-source {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.25);
+}
+.light-mode .sd-source { background: rgba(0, 0, 0, 0.04); }
+.sd-source-head {
+    padding: 10px 16px;
+    font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    border-bottom: 1px solid var(--glass-border);
+}
+.sd-code {
+    margin: 0;
+    padding: 12px 0;
+    height: 340px;
+    overflow: auto;
+    font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+    font-size: 0.76rem;
+    line-height: 1.65;
+    tab-size: 4;
+}
+.sd-code:focus-visible { outline-offset: -2px; }
+.sd-line {
+    display: flex;
+    gap: 14px;
+    padding: 0 16px;
+    white-space: pre;
+    border-left: 2px solid transparent;
+}
+.sd-line.is-current {
+    background: rgba(var(--accent-rgb), 0.12);
+    border-left-color: var(--accent-color);
+}
+.sd-linenum {
+    flex: 0 0 2.5ch;
+    text-align: right;
+    color: var(--text-dim);
+    opacity: 0.6;
+    user-select: none;
+}
+.sd-code code { color: var(--text-muted); font-family: inherit; }
+.sd-code b { color: var(--accent-color); font-weight: 500; }
+.sd-code i { color: var(--text-main); font-style: normal; }
+.sd-comment { color: var(--text-dim); }
+.sd-marker { color: var(--text-dim); opacity: 0.45; }
+
+/* --- controls --- */
+.sd-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px 24px;
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid var(--glass-border);
+}
+.sd-algos { display: flex; gap: 8px; }
+.sd-algo, .sd-btn {
+    min-height: 44px;
+    padding: 0 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 50px;
+    border: 1px solid var(--glass-border);
+    background: transparent;
+    color: var(--text-muted);
+    font-family: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s, background-color 0.2s;
+}
+.sd-algo:hover, .sd-btn:hover { color: var(--text-main); border-color: rgba(var(--accent-rgb), 0.4); }
+.sd-algo[aria-pressed="true"] {
+    color: var(--bg-color);
+    background: var(--text-main);
+    border-color: transparent;
+}
+.sd-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+.sd-btn-primary { color: var(--text-main); border-color: rgba(var(--accent-rgb), 0.5); }
+.sd-speed-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+}
+.sd-speed { width: 120px; accent-color: var(--accent-color); }
+
+@media (max-width: 900px) {
+    .sort-demo { padding: 24px 18px; border-radius: 20px; }
+    .sd-stage { grid-template-columns: 1fr; gap: 20px; }
+    .sd-bars { height: 200px; gap: 4px; }
+    .sd-code { height: 240px; font-size: 0.72rem; }
+    .sd-controls { gap: 12px 16px; }
+    .sd-algo, .sd-btn { padding: 0 16px; font-size: 0.85rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    /* Heights snap instead of sliding; the demo still runs and still steps */
+    .sd-bar { transition: none; }
+}
+
+/* ====================================================
+   VIEW TRANSITIONS API (THEME TOGGLE)
+
+   Scoped to the .theme-transition class that the toggle adds for the duration
+   of its own transition. Unscoped, this would also cancel the cross-document
+   page transition declared by @view-transition above.
+   ==================================================== */
+html.theme-transition::view-transition-old(root),
+html.theme-transition::view-transition-new(root) {
     animation: none;
     mix-blend-mode: normal;
 }

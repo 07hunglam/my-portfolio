@@ -24,7 +24,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- External Libraries. defer: parse in parallel, execute in order before DOMContentLoaded -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -33,11 +32,58 @@
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Flip.min.js"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
     <script defer src="js/main.js"></script>
+    <script defer src="js/sort-trace.js"></script>
+    <script defer src="js/sort-visualizer.js"></script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Person",
+          "@id": "https://hunglam.dev/#person",
+          "name": "Lâm Gia Hưng",
+          "alternateName": ["Hưng Lâm", "Hung Lam", "Lam Gia Hung"],
+          "url": "https://hunglam.dev/",
+          "image": "https://hunglam.dev/hunglam-og.jpg",
+          "birthDate": "2007-09-22",
+          "jobTitle": "Information Technology Student",
+          "description": "IT student and software developer working in C/C++, data structures and algorithms.",
+          "nationality": "VN",
+          "alumniOf": {
+            "@type": "CollegeOrUniversity",
+            "name": "University of Science, Vietnam National University Ho Chi Minh City",
+            "alternateName": "HCMUS",
+            "url": "https://hcmus.edu.vn/"
+          },
+          "knowsLanguage": [
+            { "@type": "Language", "name": "Vietnamese", "alternateName": "vi" },
+            { "@type": "Language", "name": "English", "alternateName": "en" },
+            { "@type": "Language", "name": "Chinese", "alternateName": "zh" }
+          ],
+          "knowsAbout": ["C++", "C", "Data Structures", "Algorithms", "Competitive Programming", "Web Development"],
+          "sameAs": [
+            "https://github.com/07hunglam",
+            "https://www.facebook.com/07.hunglam/",
+            "https://www.instagram.com/07_hunglam/"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://hunglam.dev/#website",
+          "url": "https://hunglam.dev/",
+          "name": "Hung Lam | Portfolio",
+          "inLanguage": ["en", "vi"],
+          "about": { "@id": "https://hunglam.dev/#person" },
+          "publisher": { "@id": "https://hunglam.dev/#person" }
+        }
+      ]
+    }
+    </script>
 
 </head>
 <body>
     <a class="skip-link" href="#main-content" data-i18n="skip_link">Skip to main content</a>
-    <div id="page-transition-overlay" aria-hidden="true"></div>
     <div class="progress-container" aria-hidden="true">
         <div class="progress-bar" id="readingProgress"></div>
     </div>
@@ -74,7 +120,7 @@
             </ul>
             <div class="nav-actions">
                 <button id="theme-toggle" class="nav-action-btn" aria-label="Toggle Dark/Light Mode">
-                    <i class="fa-solid fa-moon"></i>
+                    <svg class="icon" aria-hidden="true"><use href="icons.svg#icon-moon"/></svg>
                 </button>
                 <button id="lang-toggle" class="nav-action-btn" aria-label="Toggle Language" style="font-size: 1rem; font-weight: 600; padding: 5px 10px;">
                     EN
@@ -101,16 +147,16 @@
                 
                 <div class="personal-info-card glass-panel scroll-animate" style="--delay: 0.3s">
                     <ul>
-                        <li><i class="fa-solid fa-user"></i> <strong data-i18n="info_gender">Gender:</strong> <span data-i18n="info_gender_val">Male</span></li>
-                        <li><i class="fa-solid fa-calendar"></i> <strong data-i18n="info_dob">Date of Birth:</strong> <span data-i18n="info_dob_val">September 22, 2007</span></li>
-                        <li><i class="fa-solid fa-graduation-cap"></i> <strong data-i18n="info_edu">Education:</strong> <span data-i18n="info_edu_val">K26 HCMUS - University of Science</span></li>
-                        <li><i class="fa-solid fa-code"></i> <strong data-i18n="info_exp">Expertise:</strong> <span data-i18n="info_exp_val">Computer Science, C/C++, English, Chinese</span></li>
+                        <li><svg class="icon" aria-hidden="true"><use href="icons.svg#icon-user"/></svg> <strong data-i18n="info_gender">Gender:</strong> <span data-i18n="info_gender_val">Male</span></li>
+                        <li><svg class="icon" aria-hidden="true"><use href="icons.svg#icon-calendar"/></svg> <strong data-i18n="info_dob">Date of Birth:</strong> <span data-i18n="info_dob_val">September 22, 2007</span></li>
+                        <li><svg class="icon" aria-hidden="true"><use href="icons.svg#icon-graduation"/></svg> <strong data-i18n="info_edu">Education:</strong> <span data-i18n="info_edu_val">K26 HCMUS - University of Science</span></li>
+                        <li><svg class="icon" aria-hidden="true"><use href="icons.svg#icon-code"/></svg> <strong data-i18n="info_exp">Expertise:</strong> <span data-i18n="info_exp_val">Computer Science, C/C++, English, Chinese</span></li>
                     </ul>
                 </div>
                 
                 <div class="hero-buttons scroll-animate" style="--delay: 0.35s">
                     <a href="#experience" class="btn-primary" data-i18n="btn_explore">Explore My Journey</a>
-                    <a href="about.html" class="btn-secondary glass-panel"><span data-i18n="btn_beyond">Beyond the Code</span> <i class="fa-solid fa-arrow-right"></i></a>
+                    <a href="about.html" class="btn-secondary glass-panel"><span data-i18n="btn_beyond">Beyond the Code</span> <svg class="icon" aria-hidden="true"><use href="icons.svg#icon-arrow-right"/></svg></a>
                 </div>
             </div>
         </header>
@@ -135,6 +181,62 @@
                 <span>Chinese</span><span class="dot">•</span>
             </div>
         </div>
+
+        <!-- INTERACTIVE SORTING VISUALISER
+             The code panel is filled by fetching demo/sort.cpp at runtime, so
+             what is on screen is always the real file. See js/sort-visualizer.js -->
+        <section id="playground" class="section">
+            <h2 class="section-title" style="--delay: 0.05s" data-i18n="sd_title">Algorithms, Watched</h2>
+
+            <div id="sort-demo" class="sort-demo glass-panel scroll-animate" style="--delay: 0.1s">
+                <p class="sd-lead" data-i18n="sd_lead">Three sorting algorithms, running the way they actually run. The panel on the right is demo/sort.cpp itself - the highlighted line is the line doing the work.</p>
+
+                <div class="sd-stage">
+                    <div class="sd-visual">
+                        <div class="sd-bars" aria-hidden="true"></div>
+                        <p class="sd-status" role="status" aria-live="polite"></p>
+                        <p class="sd-counts" aria-hidden="true">
+                            <span class="sd-compares">0</span> <span data-i18n="sd_compares">comparisons</span>
+                            <span class="sd-sep">·</span>
+                            <span class="sd-swaps">0</span> <span data-i18n="sd_swaps">swaps</span>
+                        </p>
+                    </div>
+
+                    <div class="sd-source">
+                        <div class="sd-source-head"><span data-i18n="sd_source">demo/sort.cpp</span></div>
+                        <pre class="sd-code" tabindex="0" aria-label="C++ source, demo/sort.cpp"></pre>
+                    </div>
+                </div>
+
+                <div class="sd-controls">
+                    <div class="sd-algos" role="group" aria-label="Algorithm">
+                        <button type="button" class="sd-algo" data-algo="bubble" aria-pressed="true">Bubble</button>
+                        <button type="button" class="sd-algo" data-algo="insertion" aria-pressed="false">Insertion</button>
+                        <button type="button" class="sd-algo" data-algo="quick" aria-pressed="false">Quick</button>
+                    </div>
+
+                    <div class="sd-buttons">
+                        <button type="button" class="sd-play sd-btn sd-btn-primary" aria-pressed="false">
+                            <svg class="icon" aria-hidden="true"><use href="icons.svg#icon-play"/></svg>
+                            <span class="sd-play-text" data-i18n="sd_play">Play</span>
+                        </button>
+                        <button type="button" class="sd-step sd-btn">
+                            <svg class="icon" aria-hidden="true"><use href="icons.svg#icon-step"/></svg>
+                            <span data-i18n="sd_step">Step</span>
+                        </button>
+                        <button type="button" class="sd-shuffle sd-btn">
+                            <svg class="icon" aria-hidden="true"><use href="icons.svg#icon-shuffle"/></svg>
+                            <span data-i18n="sd_shuffle">Shuffle</span>
+                        </button>
+                    </div>
+
+                    <label class="sd-speed-wrap">
+                        <span data-i18n="sd_speed">Speed</span>
+                        <input type="range" class="sd-speed" min="1" max="10" value="6">
+                    </label>
+                </div>
+            </div>
+        </section>
 
         <section id="education" class="section">
             <h2 class="section-title" style="--delay: 0.05s" data-i18n="edu_title">Academic Background</h2>
@@ -180,8 +282,8 @@
                      role="button" tabindex="0" aria-expanded="false"
                      aria-label="Expand details: &quot;Tài&quot; Short Film Campaign">
                     <div class="project-header">
-                        <i class="fa-solid fa-film project-icon" aria-hidden="true"></i>
-                        <span class="project-link" aria-hidden="true"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+                        <svg class="icon project-icon" aria-hidden="true"><use href="icons.svg#icon-film"/></svg>
+                        <span class="project-link" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="icons.svg#icon-external"/></svg></span>
                     </div>
                     <h3 data-i18n="prj_1_title" style="font-size: 1.8rem; margin-bottom: 10px;">"Tài" Short Film Campaign</h3>
                     <p data-i18n="prj_1_desc" style="font-size: 1rem; color: var(--text-muted); margin-bottom: 20px;">Directed scriptwriting and executed professional PR content editing for a creative media campaign.</p>
@@ -194,7 +296,7 @@
 
                 <!-- Achievement 1 (Row span 2) -->
                 <div id="achievements" class="bento-item row-span-2 achievement-card ach-large glass-panel" style="--delay: 0.2s">
-                    <div class="ach-icon" aria-hidden="true"><i class="fa-solid fa-language"></i></div>
+                    <div class="ach-icon" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="icons.svg#icon-languages"/></svg></div>
                     <div>
                         <h3 data-i18n="ach_1_title">IELTS 7.5 & HSK 3</h3>
                         <p data-i18n="ach_1_desc">Advanced Linguistic Capabilities</p>
@@ -207,8 +309,8 @@
                      role="button" tabindex="0" aria-expanded="false"
                      aria-label="Expand details: System Architecture &amp; Algorithms">
                     <div class="project-header">
-                        <i class="fa-solid fa-microchip project-icon" aria-hidden="true"></i>
-                        <span class="project-link" aria-hidden="true"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+                        <svg class="icon project-icon" aria-hidden="true"><use href="icons.svg#icon-cpu"/></svg>
+                        <span class="project-link" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="icons.svg#icon-external"/></svg></span>
                     </div>
                     <h3 data-i18n="prj_2_title" style="font-size: 1.8rem; margin-bottom: 10px;">System Architecture & Algorithms</h3>
                     <p data-i18n="prj_2_desc" style="font-size: 1rem; color: var(--text-muted); margin-bottom: 20px;">Architecting optimized software lifecycles and deep C/C++ implementations for high-performance systems.</p>
@@ -221,14 +323,14 @@
                 
                 <!-- Achievement 2 -->
                 <div class="bento-item achievement-card ach-small glass-panel" style="--delay: 0.4s; padding: 30px;">
-                    <div class="ach-icon" aria-hidden="true"><i class="fa-solid fa-trophy"></i></div>
+                    <div class="ach-icon" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="icons.svg#icon-trophy"/></svg></div>
                     <h3 data-i18n="ach_2_title">ICPC Vietnam National Contestant</h3>
                     <p style="color: var(--text-muted); font-size: 0.9rem;" data-i18n="ach_2_sub">National Level Contestant</p>
                 </div>
                 
                 <!-- Achievement 3 -->
                 <div class="bento-item span-2 achievement-card ach-small glass-panel" style="--delay: 0.5s; flex-direction: row; align-items: center; justify-content: flex-start; gap: 30px; padding: 30px;">
-                    <div class="ach-icon" style="margin-bottom: 0; font-size: 3rem;" aria-hidden="true"><i class="fa-solid fa-code"></i></div>
+                    <div class="ach-icon" style="margin-bottom: 0; font-size: 3rem;" aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="icons.svg#icon-code"/></svg></div>
                     <div>
                         <h3 data-i18n="ach_3_title" style="margin-bottom: 5px;">C/C++ Mastery</h3>
                         <p style="color: var(--text-muted); font-size: 0.9rem;" data-i18n="ach_3_sub">Algorithmic Optimization</p>
@@ -242,9 +344,9 @@
             <div class="contact-container">
                 <p class="scroll-animate" style="--delay: 0.1s" data-i18n="contact_desc">Open to collaborative opportunities or a simple tech conversation.</p>
                 <div class="contact-links">
-                    <a href="mailto:hunglam220907@gmail.com" class="social-btn glass-panel scroll-animate" aria-label="Send Email" style="--delay: 0.15s"><i class="fa-solid fa-envelope" aria-hidden="true"></i> Email</a>
-                    <a href="https://www.facebook.com/07.hunglam/" target="_blank" rel="noopener noreferrer" class="social-btn glass-panel scroll-animate" aria-label="Facebook Profile (opens in a new tab)" style="--delay: 0.2s"><i class="fa-brands fa-facebook" aria-hidden="true"></i> Facebook</a>
-                    <a href="https://www.instagram.com/07_hunglam/" target="_blank" rel="noopener noreferrer" class="social-btn glass-panel scroll-animate" aria-label="Instagram Profile (opens in a new tab)" style="--delay: 0.25s"><i class="fa-brands fa-instagram" aria-hidden="true"></i> Instagram</a>
+                    <a href="mailto:hunglam220907@gmail.com" class="social-btn glass-panel scroll-animate" aria-label="Send Email" style="--delay: 0.15s"><svg class="icon" aria-hidden="true"><use href="icons.svg#icon-mail"/></svg> Email</a>
+                    <a href="https://www.facebook.com/07.hunglam/" target="_blank" rel="noopener noreferrer" class="social-btn glass-panel scroll-animate" aria-label="Facebook Profile (opens in a new tab)" style="--delay: 0.2s"><svg class="icon" aria-hidden="true"><use href="icons.svg#icon-facebook"/></svg> Facebook</a>
+                    <a href="https://www.instagram.com/07_hunglam/" target="_blank" rel="noopener noreferrer" class="social-btn glass-panel scroll-animate" aria-label="Instagram Profile (opens in a new tab)" style="--delay: 0.25s"><svg class="icon" aria-hidden="true"><use href="icons.svg#icon-instagram"/></svg> Instagram</a>
                 </div>
             </div>
         </section>
@@ -252,11 +354,11 @@
 
         <footer>
             <div class="footer-analytics" style="font-size: 0.85rem; color: var(--text-dim); margin-bottom: 10px; font-weight: 300; letter-spacing: 0.5px;">
-                <i class="fa-solid fa-eye" aria-hidden="true" style="margin-right: 5px; color: var(--accent-color, #38bdf8);"></i> <span data-i18n="footer_views">Total Views:</span> <span id="view-counter" style="color: var(--text-muted); font-weight: 400;">Loading...</span>
+                <svg class="icon" aria-hidden="true" style="margin-right: 5px; color: var(--accent-color, #38bdf8);"><use href="icons.svg#icon-eye"/></svg> <span data-i18n="footer_views">Total Views:</span> <span id="view-counter" style="color: var(--text-muted); font-weight: 400;">Loading...</span>
             </div>
             <p data-i18n="footer_copyright">&copy; 2026 Hung Lam. All rights reserved.</p>
             <a href="#about" class="back-to-top" id="backToTop" aria-label="Back to top">
-                <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
+                <svg class="icon" aria-hidden="true"><use href="icons.svg#icon-arrow-up"/></svg>
             </a>
         </footer>
     </div>
