@@ -321,9 +321,13 @@ footer { text-align: center; padding: 40px 0; border-top: 1px solid var(--glass-
     }
 }
 
-/* --- SKIP LINK --- */
+/* --- SKIP LINK ---
+   fixed, not absolute: anchored to <body> it followed the body box, and on
+   about.html the editorial board's 150px top margin collapses through and
+   pushes that box down, which left the link parked in plain sight. Fixed also
+   means it still reaches the viewport when the page is already scrolled. */
 .skip-link {
-    position: absolute;
+    position: fixed;
     left: 50%;
     top: 0;
     transform: translate(-50%, -120%);
@@ -336,7 +340,9 @@ footer { text-align: center; padding: 40px 0; border-top: 1px solid var(--glass-
     border-radius: 0 0 12px 12px;
     transition: transform 0.2s ease;
 }
-.skip-link:focus-visible {
+/* :focus, not :focus-visible - a skip link has to appear for any way of
+   reaching it, and :focus-visible is a browser heuristic that can decline */
+.skip-link:focus {
     transform: translate(-50%, 0);
     outline-offset: 2px;
 }

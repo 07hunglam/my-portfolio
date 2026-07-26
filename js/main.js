@@ -7,16 +7,14 @@ const isDesktop = window.innerWidth > 900;
 // ====================================================
 // PRELOADER
 // ====================================================
+// Dismissed as soon as the page has actually loaded. There used to be a fixed
+// 1.2s wait on top of that, which made every visitor sit and look at a loading
+// bar for a page that was already ready - pure invented latency.
 window.addEventListener('load', () => {
     const preloader = document.getElementById('preloader');
-    if (preloader) {
-        setTimeout(() => {
-            preloader.style.opacity = '0';
-            setTimeout(() => {
-                preloader.style.display = 'none';
-            }, 500); // Wait for transition to finish
-        }, 1200); // Show preloader for a short time
-    }
+    if (!preloader) return;
+    preloader.style.opacity = '0';
+    setTimeout(() => { preloader.style.display = 'none'; }, 400);
 });
 
 // ====================================================
@@ -712,26 +710,45 @@ document.addEventListener('DOMContentLoaded', fetchGitHubActivity);
 // ====================================================
 // SCROLL SPY (ACTIVE NAV LINK)
 // ====================================================
-const sections = document.querySelectorAll('section');
 const navLinks = document.querySelectorAll('.nav-links a');
 
-if (sections.length && navLinks.length) {
-    window.addEventListener('scroll', () => {
-        let current = '';
-        sections.forEach(section => {
-            if (window.scrollY >= section.offsetTop - 200) {
-                current = section.getAttribute('id');
-            }
-        });
+// Track whatever the nav actually points at, not just <section> elements:
+// "Achievements" targets a card inside the experience section, so a
+// section-only query could never light it up.
+const spyTargets = [...navLinks]
+    .map(link => ({ link, el: document.querySelector(link.getAttribute('href')) }))
+    .filter(t => t.el);
 
-        navLinks.forEach(a => {
-            const isActive = current !== '' && a.getAttribute('href') === '#' + current;
-            a.classList.toggle('active', isActive);
-            if (isActive) {
-                a.setAttribute('aria-current', 'true');
-            } else {
-                a.removeAttribute('aria-current');
-            }
+// Distances are measured from the top of the document. offsetTop is relative to
+// each element's own offsetParent, so cards nested in a grid reported tiny
+// values and sorted ahead of sections that really precede them.
+let spyOffsets = [];
+function measureSpyTargets() {
+    spyOffsets = spyTargets
+        .map(t => ({ ...t, top: t.el.getBoundingClientRect().top + window.scrollY }))
+        .sort((a, b) => a.top - b.top);
+}
+
+if (spyTargets.length) {
+    measureSpyTargets();
+    window.addEventListener('load', measureSpyTargets);
+
+    let remeasure = null;
+    window.addEventListener('resize', () => {
+        clearTimeout(remeasure);
+        remeasure = setTimeout(measureSpyTargets, 200);
+    }, { passive: true });
+
+    window.addEventListener('scroll', () => {
+        let current = null;
+        for (const t of spyOffsets) {
+            if (window.scrollY >= t.top - 200) current = t.link;
+        }
+        spyTargets.forEach(({ link }) => {
+            const isActive = link === current;
+            link.classList.toggle('active', isActive);
+            if (isActive) link.setAttribute('aria-current', 'true');
+            else link.removeAttribute('aria-current');
         });
     }, { passive: true });
 }
