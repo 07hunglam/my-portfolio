@@ -327,7 +327,7 @@ const GH_CHART_LIGHT = 'https://ghchart.rshah.org/795c2e/07hunglam';
 // Points the toggle's sprite <use> at the sun or the moon
 function setThemeIcon(button, light) {
     const use = button.querySelector('use');
-    if (use) use.setAttribute('href', light ? 'icons.svg#icon-sun' : 'icons.svg#icon-moon');
+    if (use) use.setAttribute('href', light ? '/icons.svg#icon-sun' : '/icons.svg#icon-moon');
 }
 
 const themeToggle = document.getElementById('theme-toggle');
@@ -433,12 +433,30 @@ const i18n = {
         'edu_3_name': 'University of Science (HCMUS)',
         'edu_3_desc': 'Mapping a structured academic pathway toward advanced Computer Science research.',
 
+        // --- labels for assistive tech only ---
+        'aria_theme': 'Toggle dark or light mode',
+        'aria_pagenav': 'Page navigation',
+        'aria_email': 'Send an email',
+        'aria_facebook': 'Facebook profile (opens in a new tab)',
+        'aria_instagram': 'Instagram profile (opens in a new tab)',
+        'aria_backtotop': 'Back to top',
+        'aria_algo_group': 'Choose an algorithm',
+        'aria_code_panel': 'C++ source of demo/sort.cpp',
+        'aria_close': 'Close details',
+        'aria_prj_1': 'Expand details: "Tài" Short Film Campaign',
+        'aria_prj_2': 'Expand details: System Architecture & Algorithms',
+        'aria_palette': 'Accent colour theme',
+        'aria_swatch_1': 'Sky blue accent',
+        'aria_swatch_2': 'Deep navy accent',
+        'aria_swatch_3': 'Slate grey accent',
+        'aria_swatch_4': 'Off-white accent',
+
         // --- sorting visualiser ---
         'sd_title': 'Algorithms, Watched',
         'sd_lead': 'Three sorting algorithms, running the way they actually run. The panel on the right is demo/sort.cpp itself - the highlighted line is the line doing the work.',
         'sd_play': 'Play', 'sd_pause': 'Pause', 'sd_step': 'Step', 'sd_shuffle': 'Shuffle',
         'sd_speed': 'Speed', 'sd_compares': 'comparisons', 'sd_swaps': 'swaps',
-        'sd_source': 'demo/sort.cpp', 'sd_algo_label': 'Algorithm',
+        'sd_source': 'demo/sort.cpp',
 
         // --- 404 ---
         'nf_code': '404',
@@ -520,12 +538,30 @@ const i18n = {
         'edu_3_name': 'Trường Đại học Khoa học Tự nhiên (HCMUS)',
         'edu_3_desc': 'Vạch lộ trình học thuật hướng tới nghiên cứu chuyên sâu về Khoa học Máy tính.',
 
+        // --- labels for assistive tech only ---
+        'aria_theme': 'Chuyển chế độ sáng/tối',
+        'aria_pagenav': 'Điều hướng trang',
+        'aria_email': 'Gửi email',
+        'aria_facebook': 'Trang Facebook (mở tab mới)',
+        'aria_instagram': 'Trang Instagram (mở tab mới)',
+        'aria_backtotop': 'Lên đầu trang',
+        'aria_algo_group': 'Chọn thuật toán',
+        'aria_code_panel': 'Mã nguồn C++ của demo/sort.cpp',
+        'aria_close': 'Đóng chi tiết',
+        'aria_prj_1': 'Mở chi tiết: Chiến dịch phim ngắn "Tài"',
+        'aria_prj_2': 'Mở chi tiết: Kiến trúc hệ thống & Giải thuật',
+        'aria_palette': 'Màu nhấn giao diện',
+        'aria_swatch_1': 'Màu nhấn xanh trời',
+        'aria_swatch_2': 'Màu nhấn xanh navy đậm',
+        'aria_swatch_3': 'Màu nhấn xám đá',
+        'aria_swatch_4': 'Màu nhấn trắng ngà',
+
         // --- sorting visualiser ---
         'sd_title': 'Thuật toán, xem tận mắt',
         'sd_lead': 'Ba thuật toán sắp xếp, chạy đúng như cách chúng thực sự chạy. Khung bên phải chính là file demo/sort.cpp — dòng đang sáng là dòng đang làm việc.',
         'sd_play': 'Chạy', 'sd_pause': 'Dừng', 'sd_step': 'Từng bước', 'sd_shuffle': 'Trộn lại',
         'sd_speed': 'Tốc độ', 'sd_compares': 'lượt so sánh', 'sd_swaps': 'lượt đổi chỗ',
-        'sd_source': 'demo/sort.cpp', 'sd_algo_label': 'Thuật toán',
+        'sd_source': 'demo/sort.cpp',
 
         // --- 404 ---
         'nf_code': '404',
@@ -607,6 +643,16 @@ function applyLanguage(lang) {
         }
     });
 
+    // Labels that only exist for assistive tech still have to follow the page
+    document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+        const key = el.getAttribute('data-i18n-aria');
+        if (dict[key] !== undefined) {
+            el.setAttribute('aria-label', dict[key]);
+        } else {
+            console.warn(`[i18n] missing key "${key}" for language "${lang}"`);
+        }
+    });
+
     document.documentElement.lang = lang;
 
     // Hero title is split into per-character spans by GSAP - rebuild after a swap
@@ -630,7 +676,10 @@ if (langToggle) {
         currentLang = currentLang === 'en' ? 'vi' : 'en';
         localStorage.setItem('lang', currentLang);
         langToggle.textContent = LANG_LABEL[currentLang];
-        langToggle.setAttribute('aria-label', 'Switch language (currently ' + LANG_LABEL[currentLang] + ')');
+        // Kept bilingual on purpose: someone who cannot read the current
+        // language still has to be able to find the control that changes it
+        langToggle.setAttribute('aria-label',
+            'Language / Ngôn ngữ - ' + LANG_LABEL[currentLang]);
         applyLanguage(currentLang);
     });
 }
@@ -774,8 +823,9 @@ function initProjectCards() {
         if (!closeBtn) {
             closeBtn = document.createElement('button');
             closeBtn.type = 'button';
-            closeBtn.innerHTML = '<svg class="icon" aria-hidden="true"><use href="icons.svg#icon-x"/></svg>';
+            closeBtn.innerHTML = '<svg class="icon" aria-hidden="true"><use href="/icons.svg#icon-x"/></svg>';
             closeBtn.className = 'flip-close-btn';
+            closeBtn.setAttribute('data-i18n-aria', 'aria_close');
             closeBtn.setAttribute('aria-label', 'Close details');
             closeBtn.style.cssText = 'display:none;position:absolute;top:16px;right:16px;background:transparent;border:none;color:var(--text-main);font-size:1.5rem;cursor:pointer;z-index:100;';
             card.appendChild(closeBtn);
@@ -846,6 +896,11 @@ document.addEventListener('DOMContentLoaded', () => {
     initHeroGSAP();
     initAdvancedAnimations();
     initProjectCards();
+
+    // applyLanguage already ran at parse time, before the close buttons above
+    // existed. Re-apply so anything built by JS is labelled in the right
+    // language on a first load rather than only after a manual toggle.
+    applyLanguage(document.documentElement.lang === 'vi' ? 'vi' : 'en');
 
     // TERMINAL TYPING EFFECT FOR TAGLINE
     const taglineSpans = document.querySelectorAll('.tagline span:not(.accent-dot)');

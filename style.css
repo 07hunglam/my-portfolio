@@ -1039,7 +1039,14 @@ body.modal-open .project-backdrop {
     font-size: 0.85rem;
     letter-spacing: 1px;
 }
-.sd-speed { width: 120px; accent-color: var(--accent-color); }
+/* 44px tall for the touch target (WCAG 2.5.5); the native track stays
+   centred inside that box, so it still looks like a thin slider */
+.sd-speed {
+    width: 120px;
+    height: 44px;
+    accent-color: var(--accent-color);
+    cursor: pointer;
+}
 
 @media (max-width: 900px) {
     .sort-demo { padding: 24px 18px; border-radius: 20px; }

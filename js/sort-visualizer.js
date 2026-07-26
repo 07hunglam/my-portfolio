@@ -18,7 +18,7 @@
         return;
     }
 
-    const CPP_URL = 'demo/sort.cpp';
+    const CPP_URL = '/demo/sort.cpp';
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
     const el = {
@@ -111,7 +111,7 @@
         } else {
             label.textContent = playing ? 'Pause' : 'Play';
         }
-        el.play.querySelector('use').setAttribute('href', playing ? 'icons.svg#icon-pause' : 'icons.svg#icon-play');
+        el.play.querySelector('use').setAttribute('href', playing ? '/icons.svg#icon-pause' : '/icons.svg#icon-play');
     }
 
     function delay() {
