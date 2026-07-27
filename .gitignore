@@ -13,3 +13,6 @@ demo/a.out
 Thumbs.db
 __pycache__/
 *.pyc
+
+# Tool output, not part of the site
+graphify-out/
