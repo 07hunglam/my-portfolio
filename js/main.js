@@ -804,6 +804,11 @@ function initAdvancedAnimations() {
     if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
     gsap.registerPlugin(ScrollTrigger);
 
+    // Mobile browsers fire resize every time the address bar slides in or out,
+    // which happens constantly while scrolling. Without this, ScrollTrigger
+    // recalculates on each one and can shove the scroll position around.
+    ScrollTrigger.config({ ignoreMobileResize: true });
+
     const reveal = (selector, fromVars) => {
         gsap.utils.toArray(selector).forEach((item) => {
             gsap.from(item, {

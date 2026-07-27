@@ -2,7 +2,16 @@
    RESET & CƠ BẢN
    ==================================================== */
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-html { scroll-behavior: smooth; }
+
+html {
+    scroll-behavior: smooth;
+    /* Scroll anchoring lets the browser silently move the scroll offset to keep
+       a chosen element still whenever content resizes. On a page with this much
+       animation, lazy media and a canvas it guesses wrong and yanks the reader
+       backwards mid-scroll. Everything here already reserves its own space
+       (images carry width/height), so the feature only does harm. */
+    overflow-anchor: none;
+}
 h1, h2, h3, h4, h5, h6, .hero-title, .nav-logo, .bento-title, .section-title { font-family: 'Space Grotesk', sans-serif; }
 
 :root {
@@ -42,7 +51,12 @@ h1, h2, h3, h4, h5, h6, .hero-title, .nav-logo, .bento-title, .section-title { f
 
 body {
     background-color: var(--bg-color); color: var(--text-muted); line-height: 1.7; font-weight: 300;
-    position: relative; overflow-x: hidden;
+    position: relative;
+    /* clip, not hidden: overflow-x:hidden turns <body> into a second scroll
+       container nested inside the document scroller, and two scrollers stacked
+       like that is a known source of scroll fighting on touch devices.
+       overflow-x:clip trims the same overflow without creating one. */
+    overflow-x: clip;
     background-image: var(--bg-texture), radial-gradient(circle at 50% 0%, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 70%);
 }
 
@@ -611,31 +625,14 @@ button:focus-visible, a:focus-visible {
     .timeline-item::before { left: -26.5px; width: 10px; height: 10px; }
     .timeline-item h3 { font-size: 1.2rem; }
 
-    /* --- TỐI ƯU HIỂN THỊ THẺ MILESTONES (DỄ NHÌN, CÂN ĐỐI) --- */
-    .achievements-grid {
-        display: flex !important;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        scroll-padding: 0 7.5vw; /* Căn chỉnh hoàn hảo để thẻ nằm chính giữa */
-        gap: 20px; /* Tăng khoảng cách không gian trống giữa các thẻ */
-        padding-bottom: 25px;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: thin;
-        scrollbar-color: var(--accent-color, #38bdf8) rgba(255, 255, 255, 0.05);
-        -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
-        mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
-    }
-    
-    .achievements-grid::-webkit-scrollbar { display: block !important; height: 4px; }
-    .achievements-grid::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 10px; margin: 0 5%; }
-    .achievements-grid::-webkit-scrollbar-thumb { background: var(--accent-color, #38bdf8); border-radius: 10px; }
-
+    /* --- TỐI ƯU HIỂN THỊ THẺ MILESTONES (DỄ NHÌN, CÂN ĐỐI) ---
+       The horizontal snap-carousel that used to live here targeted
+       .achievements-grid, which no longer exists in the markup - the cards sit
+       in .bento-grid now. The carousel rules were dead, but scroll-snap-align
+       stayed live on the cards, leaving snap positions declared against
+       whatever scroller happened to contain them. Removed. */
     .achievement-card {
-        min-width: 75vw; /* Ép hẹp lại để thẻ tiếp theo luôn "ló" ra ở mép màn hình */
         min-height: 230px; /* Đồng bộ chiều cao cho mọi thẻ nhìn ngăn nắp hơn */
-        scroll-snap-align: center; 
-        flex-shrink: 0;
         padding: 30px 25px;
         display: flex;
         flex-direction: column;
