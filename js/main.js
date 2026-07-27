@@ -295,25 +295,19 @@ if (isDesktop && !prefersReducedMotion.matches) {
 }
 
 // ====================================================
-// LERP BACK TO TOP
+// BACK TO TOP
+//
+// The button is pinned by CSS (position: fixed). There used to be an easing
+// loop here that rewrote its `top` every animation frame while it was
+// absolutely positioned in the document - see the note in style.css for why
+// that dragged the page upward on mobile. All that is needed now is the
+// show/hide toggle.
 // ====================================================
 const btt = document.getElementById('backToTop');
 if (btt) {
-    let currentY = window.scrollY + (window.innerHeight / 2);
-    let targetY = currentY;
-    const ease = 0.1;
-
     window.addEventListener('scroll', () => {
         btt.classList.toggle('visible', window.scrollY > 400);
-        targetY = window.scrollY + (window.innerHeight / 2) - 23;
     }, { passive: true });
-
-    function updateFloatingPosition() {
-        currentY += (targetY - currentY) * ease;
-        btt.style.top = currentY + 'px';
-        requestAnimationFrame(updateFloatingPosition);
-    }
-    requestAnimationFrame(updateFloatingPosition);
 }
 
 // ====================================================

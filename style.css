@@ -469,9 +469,16 @@ button:focus-visible, a:focus-visible {
     .contact-links { flex-direction: column; gap: 15px; }
     .social-btn { width: 100%; justify-content: center; }
 }
-/* --- NÚT CUỘN LÊN ĐẦU TRANG SMART BACK-TO-TOP --- */
+/* --- NÚT CUỘN LÊN ĐẦU TRANG SMART BACK-TO-TOP ---
+   fixed, not absolute. It used to be absolutely positioned in the document with
+   JavaScript rewriting its `top` on every animation frame to fake a floating
+   button. That mutated document layout ~60 times a second, and because the
+   easing kept running for a second or so after the user stopped scrolling,
+   Chrome's scroll anchoring kept re-adjusting the scroll position to follow the
+   moving content - which threw the page back towards the top on mobile.
+   position: fixed gives the same look with no scripting at all. */
 .back-to-top {
-    position: absolute;
+    position: fixed;
     bottom: 40px;
     right: 40px;
     width: 46px;
@@ -490,7 +497,6 @@ button:focus-visible, a:focus-visible {
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.4s ease, border-color 0.3s, box-shadow 0.3s;
-    will-change: top;
 }
 
 /* Hiển thị khi người dùng cuộn xuống */
@@ -523,10 +529,14 @@ button:focus-visible, a:focus-visible {
         flex-direction: column;
     }
 
-    /* --- Ý TƯỞNG 1: THANH ĐIỀU HƯỚNG ĐÁY (BOTTOM TAB BAR) --- */
-    /* --- HIỆU ỨNG LIQUID GLASS CHO NAVBAR --- */
+    /* --- HIỆU ỨNG LIQUID GLASS CHO NAVBAR ---
+       order: 0 puts the bar above the content. It used to be order: 2 with the
+       sections at 3-7, but those sections now live inside <main>, so they are
+       no longer flex items of this container and their order values do nothing.
+       Left at 2 the bar sorted after <main> and landed at the very bottom of
+       the page, below every section. */
     .navbar {
-        order: 2;
+        order: 0;
         position: relative !important;
         top: auto !important;
         bottom: auto !important;
@@ -549,11 +559,9 @@ button:focus-visible, a:focus-visible {
             inset 0 -1px 1px rgba(255, 255, 255, 0.02);
         z-index: 1000;
     }
-    #education { order: 3; }
-    #github-activity { order: 4; }
-    #experience { order: 5; }
-    #achievements { order: 6; }
-    #contact { order: 7; }
+    /* The per-section order rules that used to sit here were dead: those
+       sections are inside <main>, not direct children of .page-transition.
+       Document order already lays them out correctly. */
     footer { order: 8; }
     .nav-actions { margin-left: auto; margin-right: 15px; flex-shrink: 0; }
     .nav-logo { display: none; } /* Ẩn logo để nhường chỗ cho Tab Bar */
