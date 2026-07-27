@@ -1,4 +1,4 @@
-// sort.cpp - the three sorting algorithms behind the visualiser on hunglam.dev
+// sort.cpp - the three sorting algorithms behind the visualiser on hunglam.id.vn
 //
 // The page fetches THIS file and highlights a line as the animation steps, so
 // the code on screen is the code being visualised. The JavaScript finds the

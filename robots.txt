@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://hunglam.dev/sitemap.xml
+Sitemap: https://www.hunglam.id.vn/sitemap.xml
