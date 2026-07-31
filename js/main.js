@@ -170,6 +170,70 @@ if (canvas && !prefersReducedMotion.matches) {
 // ====================================================
 // VISITOR COUNTER
 // ====================================================
+
+// GPS toạ độ chuẩn tới vài mét, nhưng bật cờ này là mọi khách vào site đều
+// thấy popup xin quyền vị trí. Tắt mặc định; tra IP vẫn chạy bình thường.
+const ASK_FOR_PRECISE_LOCATION = false;
+
+// Trên Android chuỗi GPU ("Adreno (TM) 740") tách được đời chip khi hai máy
+// trùng kích thước màn hình. iOS 16+ trả về "Apple GPU" chung chung, vô dụng.
+function readGpuRenderer() {
+    try {
+        const gl = document.createElement('canvas').getContext('webgl');
+        if (!gl) return '';
+        const ext = gl.getExtension('WEBGL_debug_renderer_info');
+        return ext ? (gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) || '') : '';
+    } catch (err) {
+        return '';
+    }
+}
+
+// Chỉ Chromium có. Trường `model` là mã máy Android thật, chuẩn hơn tự bóc UA.
+async function readHighEntropyUA() {
+    const uaData = navigator.userAgentData;
+    if (!uaData || typeof uaData.getHighEntropyValues !== 'function') return null;
+    try {
+        return await uaData.getHighEntropyValues(['model', 'platform', 'platformVersion']);
+    } catch (err) {
+        return null;
+    }
+}
+
+function readPreciseLocation() {
+    if (!ASK_FOR_PRECISE_LOCATION || !navigator.geolocation) return Promise.resolve(null);
+    return new Promise((resolve) => {
+        navigator.geolocation.getCurrentPosition(
+            (pos) => resolve({
+                lat: pos.coords.latitude,
+                lon: pos.coords.longitude,
+                accuracy_m: Math.round(pos.coords.accuracy)
+            }),
+            () => resolve(null),
+            { enableHighAccuracy: true, timeout: 8000, maximumAge: 300000 }
+        );
+    });
+}
+
+async function collectClientSignals() {
+    const [hints, precise] = await Promise.all([readHighEntropyUA(), readPreciseLocation()]);
+    return {
+        screen_w: screen.width,
+        screen_h: screen.height,
+        dpr: window.devicePixelRatio || 1,
+        touch_points: navigator.maxTouchPoints || 0,
+        cores: navigator.hardwareConcurrency || 0,
+        memory_gb: navigator.deviceMemory || 0,
+        gpu: readGpuRenderer(),
+        // Múi giờ hệ thống là cách kiểm chứng vị trí IP mà không cần xin quyền
+        timezone: (Intl.DateTimeFormat().resolvedOptions().timeZone || ''),
+        language: navigator.language || '',
+        ua_model: (hints && hints.model) || '',
+        ua_platform: (hints && hints.platform) || '',
+        ua_platform_version: (hints && hints.platformVersion) || '',
+        precise: precise
+    };
+}
+
 async function updateVisitorCounter() {
     const counterEl = document.getElementById('view-counter');
     if (!counterEl) return;
@@ -179,7 +243,17 @@ async function updateVisitorCounter() {
         if (hasVisited) {
             response = await fetch('/api/counter', { method: 'GET' });
         } else {
-            response = await fetch('/api/counter', { method: 'POST' });
+            let signals = {};
+            try {
+                signals = await collectClientSignals();
+            } catch (err) {
+                // Thiếu tín hiệu vẫn phải đếm được lượt xem
+            }
+            response = await fetch('/api/counter', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(signals)
+            });
             sessionStorage.setItem('has_visited_hunglam_site', 'true');
         }
         if (!response.ok) throw new Error(`Counter API responded ${response.status}`);
